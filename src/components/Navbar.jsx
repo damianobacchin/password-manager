@@ -1,67 +1,86 @@
 import { useState } from 'react'
+import { Link, Outlet } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
 import MenuIcon from '@mui/icons-material/Menu'
-import Button from '@mui/material/Button'
+import IconButton from '@mui/material/IconButton'
 import Drawer from '@mui/material/Drawer'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Stack from '@mui/material/Stack'
+import HomeIcon from '@mui/icons-material/Home'
+import SettingsIcon from '@mui/icons-material/Settings'
 
 const Navbar = () => {
 
     const menuItems = {}
-
     const [menuOpen, setMenuOpen] = useState(false)
 
     return (
-        <Box sx={{
-            width: '100%',
-            backgroundColor: 'primary.light',
-            padding: '20px 0'
-        }}>
-            <Container sx={{
-                display: 'flex',
-                alignItems: 'center'
-            }}>
-                <Button onClick={() => setMenuOpen(!menuOpen)}>
-                    <MenuIcon fontSize='large' />
-                </Button>
-
-                <Typography
-                    variant='h1'
-                    sx={{
-                        fontSize: 30,
-                        fontWeight: 200
-                    }}
-                >
-                    Password Manager
-                </Typography>
-            </Container>
-            <Drawer
-                anchor='left'
-                open={menuOpen}
-                onClose={() => setMenuOpen(false)}
+        <>
+            <Box
                 sx={{
-                    border: '1px solid red'
+                    backgroundColor: 'primary.light',
+                    padding: '12px 0'
                 }}
             >
-                <Box
-                    role='presentation'
-                    onClick={() => setMenuOpen(false)}
+                <Container>
+                    <Stack direction='row' alignItems='center'>
+                        <IconButton onClick={() => setMenuOpen(true)}>
+                            <MenuIcon />
+                        </IconButton>
+                        <Typography variant='h4' element='h1'>Password Manager</Typography>
+
+                    </Stack>
+                </Container>
+            </Box>
+
+            <Drawer
+                open={menuOpen}
+                onClose={() => setMenuOpen(false)}
+            >
+                <List
                     sx={{
-                        width: 300
+                        backgroundColor: 'primary.light',
+                        //paddingTop: '30px',
+                        height: '100vh',
+                        minWidth: '200px'
                     }}
                 >
-                    <List>
-                        <ListItem>Pagina 1</ListItem>
-                        <ListItem>Pagina 2</ListItem>
-                        <ListItem>Pagina 3</ListItem>
-                    </List>
-                </Box>
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={() => setMenuOpen(false)}>
+                            <ListItemIcon>
+                                <HomeIcon />
+                            </ListItemIcon>
+                            <ListItemText>
+                                <Link  to='/'>Home</Link>
+                            </ListItemText>
+                        </ListItemButton>
+                    </ListItem>
+                    
+                    <ListItem disablePadding>
+                        <ListItemButton onClick={() => setMenuOpen(false)}>
+                            <ListItemIcon>
+                                <SettingsIcon />
+                            </ListItemIcon>
+                            <ListItemText>
+                                <Link  to='/settings'>Settings</Link>
+                            </ListItemText>
+                        </ListItemButton>
+                    </ListItem>
 
+                </List>
+
+                <Outlet />
             </Drawer>
-        </Box>
+
+
+
+        </>
     )
 }
 
