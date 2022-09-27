@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link, Outlet } from 'react-router-dom'
+
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -12,12 +13,15 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Stack from '@mui/material/Stack'
+
 import HomeIcon from '@mui/icons-material/Home'
 import SettingsIcon from '@mui/icons-material/Settings'
+import AddCircleIcon from '@mui/icons-material/AddCircle'
+import KeyIcon from '@mui/icons-material/Key'
+
 
 const Navbar = () => {
 
-    const menuItems = {}
     const [menuOpen, setMenuOpen] = useState(false)
 
     return (
@@ -25,7 +29,7 @@ const Navbar = () => {
             <Box
                 sx={{
                     backgroundColor: 'primary.light',
-                    padding: '12px 0'
+                    padding: '20px 0'
                 }}
             >
                 <Container>
@@ -33,7 +37,16 @@ const Navbar = () => {
                         <IconButton onClick={() => setMenuOpen(true)}>
                             <MenuIcon />
                         </IconButton>
-                        <Typography variant='h4' element='h1'>Password Manager</Typography>
+                        <Typography
+                            variant='h4'
+                            element='h1'
+                            sx={{
+                                marginLeft: '20px',
+                                fontWeight: '300'
+                            }}
+                        >
+                            Password Manager
+                        </Typography>
 
                     </Stack>
                 </Container>
@@ -46,32 +59,52 @@ const Navbar = () => {
                 <List
                     sx={{
                         backgroundColor: 'primary.light',
-                        //paddingTop: '30px',
-                        height: '100vh',
-                        minWidth: '200px'
+                        height: '100vh'
                     }}
                 >
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={() => setMenuOpen(false)}>
-                            <ListItemIcon>
-                                <HomeIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                                <Link  to='/'>Home</Link>
-                            </ListItemText>
-                        </ListItemButton>
-                    </ListItem>
-                    
-                    <ListItem disablePadding>
-                        <ListItemButton onClick={() => setMenuOpen(false)}>
-                            <ListItemIcon>
-                                <SettingsIcon />
-                            </ListItemIcon>
-                            <ListItemText>
-                                <Link  to='/settings'>Settings</Link>
-                            </ListItemText>
-                        </ListItemButton>
-                    </ListItem>
+                    <Link to='/'>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={() => setMenuOpen(false)}>
+                                <ListItemIcon>
+                                    <HomeIcon />
+                                </ListItemIcon>
+                                <ListItemText> Home </ListItemText>
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+
+                    <Link to='/new-password'>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={() => setMenuOpen(false)}>
+                                <ListItemIcon>
+                                    <AddCircleIcon />
+                                </ListItemIcon>
+                                <ListItemText> Add Password </ListItemText>
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+
+                    <Link to='/gen-password'>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={() => setMenuOpen(false)}>
+                                <ListItemIcon>
+                                    <KeyIcon />
+                                </ListItemIcon>
+                                <ListItemText> Generate Password </ListItemText>
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
+
+                    <Link to='/settings'>
+                        <ListItem disablePadding>
+                            <ListItemButton onClick={() => setMenuOpen(false)}>
+                                <ListItemIcon>
+                                    <SettingsIcon />
+                                </ListItemIcon>
+                                <ListItemText> Settings </ListItemText>
+                            </ListItemButton>
+                        </ListItem>
+                    </Link>
 
                 </List>
 

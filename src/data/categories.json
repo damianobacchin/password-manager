@@ -1,0 +1,12 @@
+{
+    "Personali": {
+        "icon": "PERSONAL",
+        "text": "Personali",
+        "link": "/categories/personali"
+    },
+    "Università": {
+        "icon": "UNIVERSITA",
+        "text": "Università",
+        "link": "/categories/università"
+    }
+}

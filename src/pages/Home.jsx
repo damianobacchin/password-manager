@@ -1,10 +1,56 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
+import categories from '../data/categories.json'
+
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
+import Stack from '@mui/material/Stack'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemButton from '@mui/material/ListItemButton'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Button from '@mui/material/Button'
+
+import AddCircleIcon from '@mui/icons-material/AddCircle'
 
 const Home = () => {
   return (
     <div>
-        <h1>Home</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Corporis deserunt porro nam, similique eveniet culpa assumenda repellendus excepturi harum animi molestias quae libero a laboriosam ullam minus magnam, maiores odio molestiae sapiente alias! Fugit reprehenderit totam officiis velit dolor suscipit adipisci odit repudiandae delectus, molestias consequuntur omnis vitae quas porro! Expedita, provident? Rerum rem repellat ullam eligendi, expedita fugit! Aut, doloremque possimus vel quasi eveniet odit dolore? Aliquam magnam, quam sit, quaerat impedit beatae harum soluta pariatur tenetur, facilis accusamus delectus praesentium rem laudantium corporis nulla molestiae ex ab omnis adipisci commodi. Eum, nulla commodi libero eveniet corrupti amet excepturi.</p>
+      <Container>
+        <Stack
+          direction='row'
+          justifyContent='space-between'
+          alignItems='baseline'
+        >
+          <Typography variant='h2'> Categorie </Typography>
+          <Button
+            variant='contained'
+            startIcon={<AddCircleIcon />}
+          >
+            Nuova categoria
+          </Button>
+        </Stack>
+
+        <List>
+          {Object.keys(categories).map(category => {
+            return <Link to={categories[category].link}>
+              <ListItem disablePadding>
+                <ListItemButton>
+                  <ListItemIcon>
+                    <AddCircleIcon />
+                  </ListItemIcon>
+                  <ListItemText> {categories[category].text} </ListItemText>
+                </ListItemButton>
+              </ListItem>
+            </Link>
+          })}
+
+
+
+        </List>
+
+      </Container>
     </div>
   )
 }
