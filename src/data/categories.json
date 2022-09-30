@@ -1,10 +1,10 @@
 {
-    "Personali": {
+    "personali": {
         "icon": "PERSONAL",
         "text": "Personali",
         "link": "/categories/personali"
     },
-    "Università": {
+    "università": {
         "icon": "UNIVERSITA",
         "text": "Università",
         "link": "/categories/università"

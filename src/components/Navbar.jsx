@@ -19,10 +19,17 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import KeyIcon from '@mui/icons-material/Key'
 
+import { getGlobalPin } from '../store'
+
 
 const Navbar = () => {
 
     const [menuOpen, setMenuOpen] = useState(false)
+    const initPassword = localStorage.getItem('init')
+    if (!initPassword && location.pathname !== '/set-global-pin') location.replace('/set-global-pin')
+
+    const globalPin = getGlobalPin()
+    if (initPassword && !globalPin && location.pathname !== '/global-pin') location.replace('/global-pin')
 
     return (
         <>

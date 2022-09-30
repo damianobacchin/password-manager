@@ -34,9 +34,13 @@ const Home = () => {
 
         <List>
           {Object.keys(categories).map(category => {
-            return <Link to={categories[category].link}>
+            return <Link key={category} to={categories[category].link}>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton
+                  sx={{
+                    borderRadius: '10px'
+                  }}
+                  >
                   <ListItemIcon>
                     <AddCircleIcon />
                   </ListItemIcon>
