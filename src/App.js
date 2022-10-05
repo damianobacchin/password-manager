@@ -16,7 +16,7 @@ import GenPassword from './pages/GenPassword'
 import Category from './pages/Category'
 import GlobalPin from './pages/GlobalPin'
 import GlobalPassword from './pages/GlobalPassword'
-import SetGlobalPin from './pages/SetGlobalPin'
+import Setup from './pages/Setup'
 
 
 export default function App() {
@@ -32,7 +32,7 @@ export default function App() {
                     <Route path='/categories/:id' element={<Category />} />
                     <Route path='/global-pin' element={<GlobalPin />} />
                     <Route path='/global-password' element={<GlobalPassword />} />
-                    <Route path='/set-global-pin' element={<SetGlobalPin />} />
+                    <Route path='/setup' element={<Setup />} />
                 </Routes>
             </Router>
         </ThemeProvider>

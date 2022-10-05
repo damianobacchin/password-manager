@@ -1,4 +1,8 @@
 import React, { useState, useRef } from 'react'
+import { useNavigate } from 'react-router-dom'
+import crypto from 'crypto-js'
+
+import { pin, password } from '../store'
 
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -17,6 +21,7 @@ import Snackbar from '@mui/material/Snackbar'
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import CloseIcon from '@mui/icons-material/Close'
 
+
 const SetGlobalPin = () => {
 
     const inputPinRef = useRef(null)
@@ -27,6 +32,8 @@ const SetGlobalPin = () => {
     const [errorShow, setErrorShow] = useState(false)
     const [errorMessage, setErrorMessage] = useState('')
 
+    const navigate = useNavigate()
+
     const handleSetGlobalPin = () => {
         const currentPin = inputPinRef.current.value
         if (currentPin.length < 4) {
@@ -34,6 +41,8 @@ const SetGlobalPin = () => {
             setErrorShow(true)
             return
         }
+        const hashedPin = crypto.SHA256(currentPin).toString(crypto.enc.Hex)
+        pin.set(hashedPin)
         setActiveStep(1)
     }
 
@@ -46,11 +55,19 @@ const SetGlobalPin = () => {
             setErrorShow(true)
             return
         }
+        const hashedPassword = crypto.SHA256(currentPassword).toString(crypto.enc.Hex)
+        password.set(hashedPassword)
         setActiveStep(2)
     }
 
     const handleSubmit = () => {
-        console.log('SUBMIT')
+
+        const initPwData = {
+            personali: {}
+        }
+        localStorage.setItem('init', true)
+        localStorage.setItem('pwdata', JSON.stringify(initPwData))
+        navigate('/')
     }
 
     const closeError = () => {

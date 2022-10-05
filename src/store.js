@@ -1,9 +1,20 @@
 let globalPin
+let globalPassword
 
-export const setGlobalPin = function(newPin) {
-    globalPin = newPin
+export const pin = {
+    set: function(newPin) {
+        globalPin = newPin
+    },
+    get: function() {
+        return globalPin
+    }
 }
-export const getGlobalPin = () => {
-    if (globalPin === undefined) return 0
-    else return globalPin
+
+export const password = {
+    set: function(newPassword) {
+        globalPassword = newPassword
+    },
+    get: function() {
+        return globalPassword
+    }
 }

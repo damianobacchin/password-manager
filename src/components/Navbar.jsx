@@ -1,5 +1,6 @@
-import { useState } from 'react'
-import { Link, Outlet } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, Outlet, useNavigate } from 'react-router-dom'
+import { pin } from '../store'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -19,17 +20,20 @@ import SettingsIcon from '@mui/icons-material/Settings'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
 import KeyIcon from '@mui/icons-material/Key'
 
-import { getGlobalPin } from '../store'
+
 
 
 const Navbar = () => {
-
+    const navigate = useNavigate()
     const [menuOpen, setMenuOpen] = useState(false)
-    const initPassword = localStorage.getItem('init')
-    if (!initPassword && location.pathname !== '/set-global-pin') location.replace('/set-global-pin')
 
-    const globalPin = getGlobalPin()
-    if (initPassword && !globalPin && location.pathname !== '/global-pin') location.replace('/global-pin')
+    useEffect(() => {
+        const globalPin = pin.get()
+        const setup = localStorage.getItem('init')
+        if (setup && !globalPin && location.pathname !== '/global-pin') navigate('/global-pin')
+        if (!setup && location.pathname !== '/setup') navigate('/setup')
+    })
+
 
     return (
         <>

@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { setGlobalPin } from '../store'
+import { pin } from '../store'
 
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -15,7 +15,7 @@ const GlobalPin = () => {
     const inputPin = useRef(null)
 
     const handleGlobalPin = () => {
-        setGlobalPin(1234)
+        //setGlobalPin(1234)
     }
     
     return (
