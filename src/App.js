@@ -29,7 +29,7 @@ export default function App() {
                     <Route path='/settings' element={<Settings />} />
                     <Route path='/new-password' element={<NewPassword />} />
                     <Route path='/gen-password' element={<GenPassword />} />
-                    <Route path='/categories/:id' element={<Category />} />
+                    <Route path='/category/:id' element={<Category />} />
                     <Route path='/global-pin' element={<GlobalPin />} />
                     <Route path='/global-password' element={<GlobalPassword />} />
                     <Route path='/setup' element={<Setup />} />

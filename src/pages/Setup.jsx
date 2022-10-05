@@ -26,6 +26,7 @@ const SetGlobalPin = () => {
 
     const inputPinRef = useRef(null)
     const inputPasswordRef = useRef(null)
+    const inputConfirmPasswordRef = useRef(null)
 
     const [activeStep, setActiveStep] = useState(0)
     const [checkboxValue, setCheckboxValue] = useState(false)
@@ -48,10 +49,16 @@ const SetGlobalPin = () => {
 
     const handleSetGlobalPassword = () => {
         const currentPassword = inputPasswordRef.current.value
+        const currentConfirmPassword = inputConfirmPasswordRef.current.value
         const regex = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
         const isValidPassword = regex.test(currentPassword)
         if (!isValidPassword) {
             setErrorMessage('La password deve contenere almeno 8 caratteri, di cui almeno una lettera minuscola, una maiuscola, un numero e un carattere speciale')
+            setErrorShow(true)
+            return
+        }
+        if (currentConfirmPassword !== currentPassword) {
+            setErrorMessage('Le due password non corrispondono')
             setErrorShow(true)
             return
         }
@@ -63,7 +70,7 @@ const SetGlobalPin = () => {
     const handleSubmit = () => {
 
         const initPwData = {
-            personali: {}
+            Personali: {}
         }
         localStorage.setItem('init', true)
         localStorage.setItem('pwdata', JSON.stringify(initPwData))
@@ -120,31 +127,65 @@ const SetGlobalPin = () => {
                     </IconButton>
                 </Stack>}
 
-                {activeStep === 1 && <Stack
-                    direction='row'
+                {activeStep === 1 && <Box
                     sx={{
+                        maxWidth: '350px',
                         display: 'flex',
                         justifyContent: 'center',
-                        marginTop: '20px'
+                        flexDirection: 'column'
                     }}
                 >
-                    <input
-                        type='text'
-                        ref={inputPasswordRef}
-                        style={{
-                            borderRadius: '10px',
-                            border: '1px solid grey',
-                            padding: '0 15px',
-                            maxWidth: '200px',
-                            fontSize: '20px',
-                            fontWeight: '100',
-                            color: 'grey'
+                    <Stack
+                        direction='row'
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: '20px'
                         }}
-                    />
-                    <IconButton onClick={handleSetGlobalPassword}>
-                        <ArrowForwardIosIcon />
-                    </IconButton>
-                </Stack>}
+                    >
+                        <input
+                            type='password'
+                            ref={inputPasswordRef}
+                            placeholder='Digitare password'
+                            style={{
+                                borderRadius: '10px',
+                                border: '1px solid grey',
+                                padding: '0 15px',
+                                height: '37px',
+                                width: '100%',
+                                fontSize: '20px',
+                                fontWeight: '100',
+                                color: 'grey'
+                            }}
+                        />
+                    </Stack>
+                    <Stack
+                        direction='row'
+                        sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: '20px'
+                        }}
+                    >
+                        <input
+                            type='password'
+                            ref={inputConfirmPasswordRef}
+                            placeholder='Conferma password'
+                            style={{
+                                borderRadius: '10px',
+                                border: '1px solid grey',
+                                padding: '0 15px',
+                                width: '100%',
+                                fontSize: '20px',
+                                fontWeight: '100',
+                                color: 'grey'
+                            }}
+                        />
+                        <IconButton onClick={handleSetGlobalPassword}>
+                            <ArrowForwardIosIcon />
+                        </IconButton>
+                    </Stack>
+                </Box>}
 
                 {activeStep === 2 && <Box sx={{
                     marginTop: '20px'
@@ -174,22 +215,22 @@ const SetGlobalPin = () => {
             </Container>
 
             <Snackbar
-                anchorOrigin={{ vertical:'top', horizontal:'right' }}
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 open={errorShow}
                 onClose={closeError}
                 message={errorMessage}
                 action={
                     <React.Fragment>
-                      <IconButton
-                        aria-label="close"
-                        color="inherit"
-                        sx={{ p: 0.5 }}
-                        onClick={closeError}
-                      >
-                        <CloseIcon />
-                      </IconButton>
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            sx={{ p: 0.5 }}
+                            onClick={closeError}
+                        >
+                            <CloseIcon />
+                        </IconButton>
                     </React.Fragment>
-                  }
+                }
             />
         </div>
     )
