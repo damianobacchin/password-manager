@@ -68,12 +68,17 @@ const SetGlobalPin = () => {
     }
 
     const handleSubmit = () => {
-
         const initPwData = {
             Personali: {}
         }
-        localStorage.setItem('init', true)
         localStorage.setItem('pwdata', JSON.stringify(initPwData))
+
+        //Setup global checksum
+        const hashedPin = pin.get()
+        const hashedPassword = password.get()
+        const checksum = crypto.SHA256(hashedPin + hashedPassword).toString(crypto.enc.Hex).substring(0, 4)
+        localStorage.setItem('checksum', checksum)
+
         navigate('/')
     }
 

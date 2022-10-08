@@ -29,7 +29,7 @@ const Navbar = () => {
 
     useEffect(() => {
         const globalPin = pin.get()
-        const setup = localStorage.getItem('init')
+        const setup = localStorage.getItem('checksum')
         if (setup && !globalPin && location.pathname !== '/global-pin') navigate('/global-pin')
         if (!setup && location.pathname !== '/setup') navigate('/setup')
     })
