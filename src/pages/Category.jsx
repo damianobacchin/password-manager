@@ -25,18 +25,25 @@ const Category = () => {
 
     let { id } = useParams()
     const [showModal, setShowModal] = useState(false)
+    const [showPasswordModal, setShowPasswordModal] = useState(false)
+    const [passwordData, setPasswordData] = useState({})
+
     const pwTitleRef = useRef(null)
     const usernameRef = useRef(null)
     const pwRef = useRef(null)
+    const descriptionRef = useRef(null)
 
     const pwdata = JSON.parse(localStorage.getItem('pwdata'))
     const pwsCategory = pwdata[id]
 
+    const masterPassword = MasterPassword.get()
+
     const handleAddPassword = () => {
         const passwordTitle = pwTitleRef.current.value
         const passwordUsername = usernameRef.current.value
+        const passwordDescription = descriptionRef.current.value
         const password = pwRef.current.value
-        if (!passwordTitle || !passwordUsername || !password) {
+        if (!passwordTitle || !password) {
             setShowModal(false)
             return
         }
@@ -47,16 +54,32 @@ const Category = () => {
         // Encrypt
         const ciphertextPassword = crypto.AES.encrypt(password, masterPassword).toString()
         const ciphertextUsername = crypto.AES.encrypt(passwordUsername, masterPassword).toString()
+        const ciphertextDescription = crypto.AES.encrypt(passwordDescription, masterPassword).toString()
         
         newPwData[id] = {
             ...pwdata[id],
             [passwordTitle]: {
+                description: ciphertextDescription,
                 username: ciphertextUsername,
                 password: ciphertextPassword
             }
         }
         localStorage.setItem('pwdata', JSON.stringify(newPwData))
         setShowModal(false)
+    }
+
+    const handleDecryptPassword = (password) => {
+        const decryptedPassword = crypto.AES.decrypt(pwdata[id][password].password, masterPassword).toString(crypto.enc.Utf8)
+        const decryptedUsername = crypto.AES.decrypt(pwdata[id][password].username, masterPassword).toString(crypto.enc.Utf8)
+        const decryptedDescription = crypto.AES.decrypt(pwdata[id][password].description, masterPassword).toString(crypto.enc.Utf8)
+        
+        setPasswordData({
+            title: password,
+            description: decryptedDescription,
+            username: decryptedUsername,
+            password: decryptedPassword
+        })
+        setShowPasswordModal(true)
     }
 
     return (
@@ -66,7 +89,7 @@ const Category = () => {
                 <List>
                     {pwsCategory && Object.keys(pwsCategory).map(pw => (
                         <ListItem>
-                            <ListItemButton>
+                            <ListItemButton onClick={() => handleDecryptPassword(pw)}>
                                 <ListItemIcon>
                                     <KeyIcon />
                                 </ListItemIcon>
@@ -101,6 +124,12 @@ const Category = () => {
                             inputRef={pwTitleRef}
                         />
                         <TextField
+                            label="Descrizione"
+                            type="text"
+                            variant="outlined"
+                            inputRef={descriptionRef}
+                        />
+                        <TextField
                             label="Username"
                             type="text"
                             variant="outlined"
@@ -115,6 +144,30 @@ const Category = () => {
                         <Button onClick={handleAddPassword}>Aggiungi</Button>
                     </Box>
 
+                </Modal>
+
+                <Modal
+                    open={showPasswordModal}
+                    onClose={() => setShowPasswordModal(false)}
+                >
+                    <Box
+                        sx={{
+                            position: 'absolute',
+                            top: '20%',
+                            left: '50%',
+                            transform: 'translate(-50%, -20%)',
+                            width: 400,
+                            bgcolor: 'primary.light',
+                            boxShadow: 24,
+                            p: 4
+                        }}>
+                            <List>
+                                <ListItem>Nome: {passwordData.title}</ListItem>
+                                <ListItem>Descrizione: {passwordData.description}</ListItem>
+                                <ListItem>Username: {passwordData.username}</ListItem>
+                                <ListItem>Password: {passwordData.password}</ListItem>
+                            </List>
+                        </Box>
                 </Modal>
 
                 <Fab
