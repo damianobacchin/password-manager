@@ -1,6 +1,7 @@
 import { useState, useRef } from 'react'
 import { useParams } from 'react-router-dom'
-//import categories from '../data/categories.json'
+import { MasterPassword } from '../store'
+import crypto from 'crypto-js'
 
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -14,6 +15,8 @@ import Button from '@mui/material/Button'
 import Fab from '@mui/material/Fab'
 import Modal from '@mui/material/Modal'
 import Box from '@mui/material/Box'
+import TextField from '@mui/material/TextField'
+
 
 import KeyIcon from '@mui/icons-material/Key'
 import AddCircleIcon from '@mui/icons-material/AddCircle'
@@ -22,17 +25,35 @@ const Category = () => {
 
     let { id } = useParams()
     const [showModal, setShowModal] = useState(false)
+    const pwTitleRef = useRef(null)
+    const usernameRef = useRef(null)
     const pwRef = useRef(null)
 
     const pwdata = JSON.parse(localStorage.getItem('pwdata'))
     const pwsCategory = pwdata[id]
 
     const handleAddPassword = () => {
-        const pwName = pwRef.current.value
+        const passwordTitle = pwTitleRef.current.value
+        const passwordUsername = usernameRef.current.value
+        const password = pwRef.current.value
+        if (!passwordTitle || !passwordUsername || !password) {
+            setShowModal(false)
+            return
+        }
+        const masterPassword = MasterPassword.get()
+
         let newPwData = pwdata
+
+        // Encrypt
+        const ciphertextPassword = crypto.AES.encrypt(password, masterPassword).toString()
+        const ciphertextUsername = crypto.AES.encrypt(passwordUsername, masterPassword).toString()
+        
         newPwData[id] = {
             ...pwdata[id],
-            [pwName]: "password"
+            [passwordTitle]: {
+                username: ciphertextUsername,
+                password: ciphertextPassword
+            }
         }
         localStorage.setItem('pwdata', JSON.stringify(newPwData))
         setShowModal(false)
@@ -71,10 +92,25 @@ const Category = () => {
                             boxShadow: 24,
                             p: 4
                         }}>
-                        <Typography variant='h5'>Modal</Typography>
-                        <input type="text"
-                            placeholder='Titolo password'
-                            ref={pwRef}
+                        <Typography variant='h5'>Aggiungi una nuova password nella categoria {id}</Typography>
+
+                        <TextField
+                            label="Nome password"
+                            type="text"
+                            variant="outlined"
+                            inputRef={pwTitleRef}
+                        />
+                        <TextField
+                            label="Username"
+                            type="text"
+                            variant="outlined"
+                            inputRef={usernameRef}
+                        />
+                        <TextField
+                            label="Password"
+                            type="text"
+                            variant="outlined"
+                            inputRef={pwRef}
                         />
                         <Button onClick={handleAddPassword}>Aggiungi</Button>
                     </Box>

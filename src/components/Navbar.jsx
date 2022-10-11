@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, Outlet, useNavigate } from 'react-router-dom'
-import { pin } from '../store'
+import { MasterPassword } from '../store'
 
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
@@ -28,9 +28,9 @@ const Navbar = () => {
     const [menuOpen, setMenuOpen] = useState(false)
 
     useEffect(() => {
-        const globalPin = pin.get()
+        const masterPassword = MasterPassword.get()
         const setup = localStorage.getItem('checksum')
-        if (setup && !globalPin && location.pathname !== '/global-pin') navigate('/global-pin')
+        if (setup && !masterPassword && location.pathname !== '/master-password') navigate('/master-password')
         if (!setup && location.pathname !== '/setup') navigate('/setup')
     })
 

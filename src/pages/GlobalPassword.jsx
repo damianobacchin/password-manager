@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react'
-import { pin, password } from '../store'
+import { MasterPassword } from '../store'
 import { useNavigate } from 'react-router-dom'
 import crypto from 'crypto-js'
 
@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import Snackbar from '@mui/material/Snackbar'
 import IconButton from '@mui/material/IconButton'
+import TextField from '@mui/material/TextField'
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import CloseIcon from '@mui/icons-material/Close'
@@ -20,22 +21,22 @@ const GlobalPassword = () => {
     const [errorMessage, setErrorMessage] = useState('')
     const inputPw = useRef(null)
 
-    const handleGlobalPw = () => {
-        const pwValue = inputPw.current.value
-        if (pwValue) password.set(pwValue)
-        const pinValue = pin.get()
-        const hashedPin = crypto.SHA256(pinValue).toString(crypto.enc.Hex)
-        const hashedPassword = crypto.SHA256(pwValue).toString(crypto.enc.Hex)
-        const checksumValue = crypto.SHA256(hashedPin + hashedPassword).toString(crypto.enc.Hex).substring(0, 4)
-        
+    const handleSetMasterPassword = () => {
+        const passwordValue = inputPw.current.value
+        const hashedPassword = crypto.SHA256(passwordValue).toString(crypto.enc.Hex)
+        const checksumValue = hashedPassword.substring(0, 4)
+
+        console.log(checksumValue, localStorage.getItem('checksum'))
+
         if (checksumValue !== localStorage.getItem('checksum')) {
-            setErrorMessage('Pin o master password non corretti')
+            setErrorMessage('Master password non corretta')
             setErrorShow(true)
             setTimeout(() => {
-                navigate('/global-pin')
+                navigate('/master-password')
             }, 2000)
             
         } else {
+            MasterPassword.set(hashedPassword)
             navigate('/')
         }
     }
@@ -47,15 +48,14 @@ const GlobalPassword = () => {
     return (
         <Container>
             <Typography variant='h3'>Inserire Master password</Typography>
-            <Stack direction='row' alignItems='center'>
-                <input
-                style={{
-                    height: 30
-                }}
-                    type='password'
-                    ref={inputPw}
+            <Stack direction='row' alignItems='center'>                
+                <TextField
+                    label="Master password"
+                    type="password"
+                    variant="outlined"
+                    inputRef={inputPw}
                 />
-                <IconButton onClick={handleGlobalPw} >
+                <IconButton onClick={handleSetMasterPassword} >
                     <ArrowForwardIosIcon />
                 </IconButton>
             </Stack>

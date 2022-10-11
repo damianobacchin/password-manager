@@ -14,7 +14,6 @@ import Settings from './pages/Settings'
 import NewPassword from './pages/NewPassword'
 import GenPassword from './pages/GenPassword'
 import Category from './pages/Category'
-import GlobalPin from './pages/GlobalPin'
 import GlobalPassword from './pages/GlobalPassword'
 import Setup from './pages/Setup'
 
@@ -30,8 +29,7 @@ export default function App() {
                     <Route path='/new-password' element={<NewPassword />} />
                     <Route path='/gen-password' element={<GenPassword />} />
                     <Route path='/category/:id' element={<Category />} />
-                    <Route path='/global-pin' element={<GlobalPin />} />
-                    <Route path='/global-password' element={<GlobalPassword />} />
+                    <Route path='/master-password' element={<GlobalPassword />} />
                     <Route path='/setup' element={<Setup />} />
                 </Routes>
             </Router>

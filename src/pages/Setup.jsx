@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import crypto from 'crypto-js'
 
-import { pin, password } from '../store'
+import { MasterPassword } from '../store'
 
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
@@ -17,6 +17,7 @@ import Checkbox from '@mui/material/Checkbox'
 import FormGroup from '@mui/material/FormGroup'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Snackbar from '@mui/material/Snackbar'
+import TextField from '@mui/material/TextField'
 
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'
 import CloseIcon from '@mui/icons-material/Close'
@@ -24,7 +25,6 @@ import CloseIcon from '@mui/icons-material/Close'
 
 const SetGlobalPin = () => {
 
-    const inputPinRef = useRef(null)
     const inputPasswordRef = useRef(null)
     const inputConfirmPasswordRef = useRef(null)
 
@@ -35,19 +35,7 @@ const SetGlobalPin = () => {
 
     const navigate = useNavigate()
 
-    const handleSetGlobalPin = () => {
-        const currentPin = inputPinRef.current.value
-        if (currentPin.length < 4) {
-            setErrorMessage('Inserire un PIN di almeno 4 cifre')
-            setErrorShow(true)
-            return
-        }
-        const hashedPin = crypto.SHA256(currentPin).toString(crypto.enc.Hex)
-        pin.set(hashedPin)
-        setActiveStep(1)
-    }
-
-    const handleSetGlobalPassword = () => {
+    const handleSetMasterPassword = () => {
         const currentPassword = inputPasswordRef.current.value
         const currentConfirmPassword = inputConfirmPasswordRef.current.value
         const regex = new RegExp('^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$')
@@ -63,8 +51,8 @@ const SetGlobalPin = () => {
             return
         }
         const hashedPassword = crypto.SHA256(currentPassword).toString(crypto.enc.Hex)
-        password.set(hashedPassword)
-        setActiveStep(2)
+        MasterPassword.set(hashedPassword)
+        setActiveStep(1)
     }
 
     const handleSubmit = () => {
@@ -74,10 +62,8 @@ const SetGlobalPin = () => {
         localStorage.setItem('pwdata', JSON.stringify(initPwData))
 
         //Setup global checksum
-        const hashedPin = pin.get()
-        const hashedPassword = password.get()
-        const checksum = crypto.SHA256(hashedPin + hashedPassword).toString(crypto.enc.Hex).substring(0, 4)
-        localStorage.setItem('checksum', checksum)
+        const masterPassword = MasterPassword.get()
+        localStorage.setItem('checksum', masterPassword.substring(0, 4))
 
         navigate('/')
     }
@@ -87,8 +73,7 @@ const SetGlobalPin = () => {
     }
 
     const steps = [
-        'Imposta PIN',
-        'Imposta Password',
+        'Imposta Master Password',
         'Conferma'
     ]
 
@@ -106,33 +91,8 @@ const SetGlobalPin = () => {
                     </Stepper>
                 </Box>
 
-                {activeStep === 0 && <Stack
-                    direction='row'
-                    sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        marginTop: '20px'
-                    }}
-                >
-                    <input
-                        type='number'
-                        ref={inputPinRef}
-                        style={{
-                            borderRadius: '10px',
-                            border: '1px solid grey',
-                            padding: '0 15px',
-                            maxWidth: '100px',
-                            fontSize: '20px',
-                            fontWeight: '100',
-                            color: 'grey'
-                        }}
-                    />
-                    <IconButton onClick={handleSetGlobalPin}>
-                        <ArrowForwardIosIcon />
-                    </IconButton>
-                </Stack>}
 
-                {activeStep === 1 && <Box
+                {activeStep === 0 && <Box
                     sx={{
                         maxWidth: '350px',
                         display: 'flex',
@@ -148,20 +108,11 @@ const SetGlobalPin = () => {
                             marginTop: '20px'
                         }}
                     >
-                        <input
-                            type='password'
-                            ref={inputPasswordRef}
-                            placeholder='Digitare password'
-                            style={{
-                                borderRadius: '10px',
-                                border: '1px solid grey',
-                                padding: '0 15px',
-                                height: '37px',
-                                width: '100%',
-                                fontSize: '20px',
-                                fontWeight: '100',
-                                color: 'grey'
-                            }}
+                        <TextField
+                            label="Master password"
+                            type="password"
+                            variant="outlined"
+                            inputRef={inputPasswordRef}
                         />
                     </Stack>
                     <Stack
@@ -172,27 +123,19 @@ const SetGlobalPin = () => {
                             marginTop: '20px'
                         }}
                     >
-                        <input
-                            type='password'
-                            ref={inputConfirmPasswordRef}
-                            placeholder='Conferma password'
-                            style={{
-                                borderRadius: '10px',
-                                border: '1px solid grey',
-                                padding: '0 15px',
-                                width: '100%',
-                                fontSize: '20px',
-                                fontWeight: '100',
-                                color: 'grey'
-                            }}
+                        <TextField
+                            label="Conferma password"
+                            type="password"
+                            variant="outlined"
+                            inputRef={inputConfirmPasswordRef}
                         />
-                        <IconButton onClick={handleSetGlobalPassword}>
+                        <IconButton onClick={handleSetMasterPassword}>
                             <ArrowForwardIosIcon />
                         </IconButton>
                     </Stack>
                 </Box>}
 
-                {activeStep === 2 && <Box sx={{
+                {activeStep === 1 && <Box sx={{
                     marginTop: '20px'
                 }}>
                     <Typography variant='p'>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Rem laborum nemo aut quia neque laudantium non debitis. Explicabo, corrupti! Aliquam adipisci doloremque possimus quasi ab atque labore dignissimos harum vero quos, rerum repellat quod omnis assumenda commodi, consequuntur at. Fugiat nostrum porro, sapiente, earum nam aliquid possimus natus ullam quidem blanditiis facere repudiandae voluptatum ad quos. Tenetur amet iusto fugit ratione quos optio suscipit pariatur doloribus at. Est, recusandae! Vero, cumque ipsa? Et sequi magnam, necessitatibus est, voluptas laborum iste obcaecati quasi exercitationem repudiandae consequuntur cum id in assumenda fugiat! Consequuntur eum ex consectetur voluptatibus asperiores officia minus omnis. Sunt.</Typography>

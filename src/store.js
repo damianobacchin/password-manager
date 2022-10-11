@@ -1,16 +1,6 @@
-let globalPin
 let globalPassword
 
-export const pin = {
-    set: function(newPin) {
-        globalPin = newPin
-    },
-    get: function() {
-        return globalPin
-    }
-}
-
-export const password = {
+export const MasterPassword = {
     set: function(newPassword) {
         globalPassword = newPassword
     },
